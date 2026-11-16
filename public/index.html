@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07060d">
+  <title>CuseSoft Store — Productos digitales con entrega inmediata</title>
+  <meta name="description" content="Plantillas, cursos y recursos digitales de CuseSoft. Paga con Yape, confirma tu operación y descarga al instante.">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="page-glow" aria-hidden="true">
+    <span class="glow glow-a"></span>
+    <span class="glow glow-b"></span>
+    <span class="glow glow-c"></span>
+  </div>
+
+  <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="#top" aria-label="CuseSoft Store, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M20.7 25.2A10.4 10.4 0 1 1 20.7 6.8" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/><circle cx="23.6" cy="16" r="3.1" fill="currentColor"/></svg>
+        </span>
+        <span class="brand-text">CuseSoft<span>Store</span></span>
+      </a>
+
+      <nav class="main-nav" aria-label="Navegación principal">
+        <a href="#catalogo">Catálogo</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#preguntas">Preguntas</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="account-btn" id="accountBtn" type="button" aria-haspopup="dialog">
+          <span class="account-ico" id="accountIcon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c.7-3.6 3.6-5.6 7-5.6s6.3 2 7 5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </span>
+          <span class="account-label" id="accountLabel">Ingresar</span>
+        </button>
+        <button class="cart-btn" id="cartBtn" type="button" aria-label="Abrir carrito" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h2.2l1.6 10.2a2 2 0 0 0 2 1.7h7.5a2 2 0 0 0 2-1.6L21 8H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.2" fill="currentColor"/><circle cx="17.5" cy="20" r="1.2" fill="currentColor"/></svg>
+          <span class="cart-count" id="cartCount" hidden>0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="pulse-dot" aria-hidden="true"></span> Pago con Yape · Descarga inmediata</span>
+          <h1>Productos digitales que <span class="grad-text">te ahorran semanas</span> de trabajo.</h1>
+          <p class="hero-lead">Plantillas, cursos y recursos creados por CuseSoft. Paga con Yape, confirma tu operación y recibe tus enlaces de descarga al instante.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="#catalogo">Explorar catálogo <span aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost btn-lg" href="#como-funciona">Cómo funciona</a>
+          </div>
+          <ul class="hero-proof">
+            <li><strong>+3.500</strong><span>descargas</span></li>
+            <li><strong>4.8 / 5</strong><span>valoración</span></li>
+            <li><strong>7 días</strong><span>para descargar</span></li>
+          </ul>
+        </div>
+
+        <div class="hero-art" aria-hidden="true">
+          <span class="orb orb-a"></span>
+          <span class="orb orb-b"></span>
+
+          <div class="float-card float-a">
+            <img src="/assets/covers/freelance-os.svg" alt="">
+            <div class="float-meta">
+              <span>Freelance OS</span>
+              <strong>S/ 49.90</strong>
+            </div>
+          </div>
+
+          <div class="float-card float-b">
+            <img src="/assets/covers/react-desde-cero.svg" alt="">
+            <div class="float-meta">
+              <span>React desde cero</span>
+              <strong>S/ 89.90</strong>
+            </div>
+          </div>
+
+          <div class="float-chip chip-paid">
+            <span class="chip-check" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><path d="m6 12.5 4 4L18.5 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <div><strong>Pago confirmado</strong><span>Enlaces enviados a tu correo</span></div>
+          </div>
+
+          <div class="float-chip chip-yape">
+            <span class="yape-mark" aria-hidden="true">Y</span>
+            <div><strong>Yape</strong><span>Escanea · paga · descarga</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="trust-strip">
+          <div class="trust-item">
+            <span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3 5 6v5.5c0 4.2 3 7.6 7 9.5 4-1.9 7-5.3 7-9.5V6l-7-3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div><strong>Cuenta verificada</strong><span>Código OTP a tu correo</span></div>
+          </div>
+          <div class="trust-item">
+            <span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4.5" width="18" height="15" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 9h17" stroke="currentColor" stroke-width="1.7"/><path d="M7 14h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <div><strong>Pago con Yape</strong><span>QR + código de operación</span></div>
+          </div>
+          <div class="trust-item">
+            <span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m7.5 11 4.5 4.5L16.5 11" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></span>
+            <div><strong>Entrega inmediata</strong><span>Links de descarga firmados</span></div>
+          </div>
+          <div class="trust-item">
+            <span class="trust-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="m10 9 5 3-5 3V9Z" fill="currentColor"/></svg></span>
+            <div><strong>Video incluido</strong><span>Instrucciones en YouTube</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="catalogo">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-copy">
+            <span class="eyebrow">Catálogo</span>
+            <h2>Elige tu próximo recurso</h2>
+            <p>Compra una vez y descarga cuando lo necesites. Todos los productos incluyen video de instrucciones.</p>
+          </div>
+          <label class="search" for="searchInput">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.4" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <input id="searchInput" type="search" placeholder="Buscar producto, categoría..." autocomplete="off">
+          </label>
+        </div>
+
+        <div class="chip-row" id="categoryChips" role="group" aria-label="Filtrar por categoría"></div>
+        <div class="product-grid" id="productGrid" aria-live="polite"></div>
+        <div class="empty-state" id="catalogEmpty" hidden>
+          <span class="empty-ico" aria-hidden="true">⌕</span>
+          <h3>No encontramos productos</h3>
+          <p>Prueba con otra búsqueda o cambia de categoría.</p>
+          <button class="btn btn-ghost" type="button" id="clearFiltersBtn">Limpiar filtros</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="como-funciona">
+      <div class="container">
+        <div class="section-head center">
+          <div class="section-copy">
+            <span class="eyebrow">Cómo funciona</span>
+            <h2>De la compra a la descarga en 4 pasos</h2>
+            <p>Sin formularios eternos ni esperas. Verificamos tu correo y confirmamos tu Yape para entregarte el producto.</p>
+          </div>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step-number">01</span>
+            <h3>Elige y agrega</h3>
+            <p>Explora el catálogo y suma tus productos al carrito. No necesitas cuenta para mirar.</p>
+          </li>
+          <li class="step">
+            <span class="step-number">02</span>
+            <h3>Crea tu cuenta</h3>
+            <p>Regístrate con tu correo y un código OTP, o continúa con Google en un clic.</p>
+          </li>
+          <li class="step">
+            <span class="step-number">03</span>
+            <h3>Paga con Yape</h3>
+            <p>Escanea el QR, yapea el monto exacto y guarda el número de operación.</p>
+          </li>
+          <li class="step">
+            <span class="step-number">04</span>
+            <h3>Descarga al instante</h3>
+            <p>Confirma la operación y recibe por correo tu link de descarga y el video de instrucciones.</p>
+          </li>
+        </ol>
+
+        <div class="info-band">
+          <div class="info-band-copy">
+            <span class="yape-mark yape-mark-lg" aria-hidden="true">Y</span>
+            <div>
+              <h3>Pago directo con Yape, sin comisiones extra</h3>
+              <p>Generamos un QR único por pedido. Al confirmar tu número de operación, desbloqueamos tus descargas.</p>
+            </div>
+          </div>
+          <span class="info-pill">Tiempo promedio: 2 minutos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq" id="preguntas">
+      <div class="container faq-grid">
+        <div class="faq-copy">
+          <span class="eyebrow">Preguntas frecuentes</span>
+          <h2>Todo lo que necesitas saber</h2>
+          <p>Si te queda alguna duda, escríbenos y te respondemos el mismo día.</p>
+          <a class="btn btn-ghost" href="mailto:soporte@cusesoft.com" id="supportLink">Hablar con soporte</a>
+        </div>
+        <div class="accordion">
+          <details open>
+            <summary>¿Cómo recibo mi producto?</summary>
+            <p>Después de confirmar tu pago, verás los botones de descarga en pantalla y también enviaremos dos enlaces a tu correo: uno para descargar el producto y otro con el video de instrucciones en YouTube.</p>
+          </details>
+          <details>
+            <summary>¿Cuánto dura el enlace de descarga?</summary>
+            <p>Los enlaces son personales y vencen 7 días después de la compra. Puedes generar enlaces nuevos entrando a <strong>Mis compras</strong> con tu cuenta.</p>
+          </details>
+          <details>
+            <summary>¿Qué pasa si el pago no se confirma?</summary>
+            <p>Tu pedido queda pendiente durante 30 minutos. Si el código de operación es incorrecto, puedes volver a intentarlo. Si el plazo vence, genera un pedido nuevo desde el carrito.</p>
+          </details>
+          <details>
+            <summary>¿Puedo iniciar sesión con Google?</summary>
+            <p>Sí. Si inicias con Google, tu cuenta queda creada automáticamente. Puedes completar tu año de nacimiento desde tu perfil cuando quieras.</p>
+          </details>
+          <details>
+            <summary>¿Los productos son descargables para siempre?</summary>
+            <p>Compras una licencia personal. Puedes volver a descargar el archivo desde tu cuenta mientras la tienda esté activa, respetando los términos de uso de cada producto.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-band">
+          <div>
+            <span class="eyebrow">Empieza hoy</span>
+            <h2>Tu próximo proyecto empieza con un clic.</h2>
+            <p>Elige un producto, paga con Yape y recibe todo en tu correo.</p>
+          </div>
+          <a class="btn btn-accent btn-lg" href="#catalogo">Ver productos <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M20.7 25.2A10.4 10.4 0 1 1 20.7 6.8" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/><circle cx="23.6" cy="16" r="3.1" fill="currentColor"/></svg>
+          </span>
+          <span class="brand-text">CuseSoft<span>Store</span></span>
+        </a>
+        <p>Productos digitales para creadores, freelancers y equipos que quieren avanzar más rápido.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Tienda</h3>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#preguntas">Preguntas frecuentes</a>
+      </div>
+      <div class="footer-col">
+        <h3>Cuenta</h3>
+        <a href="#" data-open-account>Mis compras</a>
+        <a href="#" data-open-auth>Iniciar sesión</a>
+        <a href="mailto:soporte@cusesoft.com">Soporte</a>
+      </div>
+      <div class="footer-col">
+        <h3>Pago</h3>
+        <span class="footer-note"><span class="yape-mark" aria-hidden="true">Y</span> Yape</span>
+        <span class="footer-note muted">PEN · Soles peruanos</span>
+        <span class="footer-note muted">Descargas por 7 días</span>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© <span id="year">2026</span> CuseSoft. Todos los derechos reservados.</span>
+      <span id="devOutboxSlot"></span>
+    </div>
+  </footer>
+
+  <div class="scrim" id="scrim" hidden></div>
+
+  <aside class="drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <span class="eyebrow">Tu selección</span>
+        <h2 id="cartTitle">Carrito</h2>
+      </div>
+      <button class="icon-btn" type="button" data-close-cart aria-label="Cerrar carrito">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="drawer-body" id="cartItems"></div>
+    <div class="drawer-foot">
+      <div class="total-row"><span>Total</span><strong id="cartTotal">S/ 0.00</strong></div>
+      <p class="drawer-hint" id="cartHint">Pago con Yape · Descarga inmediata</p>
+      <button class="btn btn-primary btn-block" type="button" id="checkoutBtn">Pagar con Yape</button>
+      <button class="btn btn-ghost btn-block" type="button" data-close-cart>Seguir explorando</button>
+    </div>
+  </aside>
+
+  <div class="modal" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle" aria-hidden="true">
+    <div class="modal-panel modal-xl">
+      <button class="modal-close" type="button" data-close-modal aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+      <div id="productModalBody"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle" aria-hidden="true">
+    <div class="modal-panel modal-md">
+      <button class="modal-close" type="button" data-close-modal aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+      <div id="authModalBody"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle" aria-hidden="true">
+    <div class="modal-panel modal-lg">
+      <button class="modal-close" type="button" data-close-modal aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+      <div id="checkoutModalBody"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle" aria-hidden="true">
+    <div class="modal-panel modal-md">
+      <button class="modal-close" type="button" data-close-modal aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
+      <div id="accountModalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+  <noscript>
+    <div class="noscript">Esta tienda necesita JavaScript para el carrito, la verificación por correo y el pago con Yape.</div>
+  </noscript>
+
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Dependencias
+node_modules/
+
+# Configuración y datos locales
+.env
+.env.local
+server/data/db.json
+server/data/outbox/
+server/data/.session-secret
+
+# Productos generados (se recrean con: npm run assets)
+server/files/
+public/assets/covers/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
