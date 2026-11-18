@@ -1,25 +1,17 @@
-import fs from 'node:fs';
 import path from 'node:path';
-import { dataDir, filesDir } from './config.js';
+import {
+  fileInfo,
+  getProduct,
+  getRawProducts,
+  insertProduct,
+  listAvailableFiles,
+  productFilePath,
+  removeProduct,
+  saveCatalog,
+} from './models/products.js';
 import { HttpError } from './util.js';
 
-const catalogFile = path.join(dataDir, 'products.json');
-
-function readCatalog() {
-  const raw = fs.readFileSync(catalogFile, 'utf8');
-  const parsed = JSON.parse(raw);
-  if (!Array.isArray(parsed)) throw new Error('products.json debe contener un arreglo de productos');
-  return parsed;
-}
-
-const products = readCatalog();
-const byId = new Map(products.map((product) => [product.id, product]));
-
-function saveCatalog() {
-  const tmp = `${catalogFile}.${process.pid}.tmp`;
-  fs.writeFileSync(tmp, JSON.stringify(products, null, 2));
-  fs.renameSync(tmp, catalogFile);
-}
+export { getProduct, listAvailableFiles, productFilePath };
 
 function slugify(value) {
   return String(value || '')
@@ -31,38 +23,8 @@ function slugify(value) {
     .slice(0, 60);
 }
 
-function fileInfo(product) {
-  const filePath = productFilePath(product);
-  if (!filePath) return { label: product.fileType || 'PDF', exists: false };
-  try {
-    const { size } = fs.statSync(filePath);
-    const kb = size / 1024;
-    return {
-      label: `${product.fileType || 'PDF'} · ${kb >= 1024 ? `${(kb / 1024).toFixed(1)} MB` : `${Math.max(1, Math.round(kb))} KB`}`,
-      exists: true,
-    };
-  } catch {
-    return { label: product.fileType || 'PDF', exists: false };
-  }
-}
-
-export function listAvailableFiles() {
-  try {
-    return fs
-      .readdirSync(filesDir, { withFileTypes: true })
-      .filter((entry) => entry.isFile() && !entry.name.startsWith('.'))
-      .map((entry) => {
-        const stat = fs.statSync(path.join(filesDir, entry.name));
-        return { name: entry.name, size: stat.size };
-      })
-      .sort((a, b) => a.name.localeCompare(b.name));
-  } catch {
-    return [];
-  }
-}
-
 export function listProducts() {
-  return products.map((product) => {
+  return getRawProducts().map((product) => {
     const info = fileInfo(product);
     return {
       id: product.id,
@@ -85,7 +47,7 @@ export function listProducts() {
 }
 
 export function listAdminProducts() {
-  return products.map((product) => {
+  return getRawProducts().map((product) => {
     const info = fileInfo(product);
     return {
       ...product,
@@ -99,19 +61,8 @@ export function listAdminProducts() {
   });
 }
 
-export function getProduct(id) {
-  return byId.get(id) || null;
-}
-
 export function getCategories() {
-  return [...new Set(products.map((product) => product.category))];
-}
-
-export function productFilePath(product) {
-  if (!product?.fileName) return null;
-  const resolved = path.resolve(filesDir, String(product.fileName));
-  if (!resolved.startsWith(path.resolve(filesDir) + path.sep)) return null;
-  return resolved;
+  return [...new Set(getRawProducts().map((product) => product.category))];
 }
 
 function normalizeIncludes(value) {
@@ -165,7 +116,7 @@ export function createProduct(data) {
   const baseId = slugify(data?.id || clean.name) || `producto-${Date.now()}`;
   let id = baseId;
   let counter = 2;
-  while (byId.has(id)) {
+  while (getProduct(id)) {
     id = `${baseId}-${counter++}`;
   }
 
@@ -189,14 +140,12 @@ export function createProduct(data) {
     sales: 0,
   };
 
-  products.push(product);
-  byId.set(product.id, product);
-  saveCatalog();
+  insertProduct(product);
   return listAdminProducts().find((item) => item.id === product.id);
 }
 
 export function updateProduct(id, patch) {
-  const product = byId.get(id);
+  const product = getProduct(id);
   if (!product) {
     throw new HttpError(404, 'Producto no encontrado.', 'PRODUCT_NOT_FOUND');
   }
@@ -221,12 +170,9 @@ export function updateProduct(id, patch) {
 }
 
 export function deleteProduct(id) {
-  const index = products.findIndex((item) => item.id === id);
-  if (index === -1) {
+  const removed = removeProduct(id);
+  if (!removed) {
     throw new HttpError(404, 'Producto no encontrado.', 'PRODUCT_NOT_FOUND');
   }
-  const [removed] = products.splice(index, 1);
-  byId.delete(removed.id);
-  saveCatalog();
   return { ok: true, id: removed.id };
 }

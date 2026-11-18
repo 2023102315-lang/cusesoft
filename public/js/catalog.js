@@ -76,9 +76,12 @@ function productCard(product) {
             <strong>${formatMoney(product.price)}</strong>
             ${product.compareAt ? `<s>${formatMoney(product.compareAt)}</s>` : ''}
           </div>
-          <button class="add-btn" type="button" data-add="${esc(product.id)}" aria-label="Agregar ${esc(product.name)} al carrito">
-            ${icons.plus} Agregar
-          </button>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <a class="btn btn-ghost btn-sm" href="/producto/${esc(product.id)}" aria-label="Ver ficha de ${esc(product.name)}">Ficha</a>
+            <button class="add-btn" type="button" data-add="${esc(product.id)}" aria-label="Agregar ${esc(product.name)} al carrito">
+              ${icons.plus} Agregar
+            </button>
+          </div>
         </div>
       </div>
     </article>`;
@@ -257,6 +260,12 @@ export async function initCatalog() {
     renderChips();
     renderGrid();
     syncHeroFeatured();
+
+    const addParam = new URLSearchParams(window.location.search).get('add');
+    if (addParam && getProduct(addParam)) {
+      addProductToCart(addParam);
+      window.history.replaceState({}, '', '/');
+    }
   } catch (error) {
     const grid = $('#productGrid');
     if (grid) {

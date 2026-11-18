@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import { OAuth2Client } from 'google-auth-library';
 import { config } from './config.js';
-import { getDb, publicUser, saveDb } from './db.js';
+import { getDb, publicUser, saveDb } from './models/db.js';
 import { otpEmail } from './emails.js';
 import { sendMail } from './mailer.js';
 import {

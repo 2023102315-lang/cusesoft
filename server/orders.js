@@ -2,10 +2,10 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import QRCode from 'qrcode';
 import { config } from './config.js';
-import { getDb, saveDb } from './db.js';
+import { getDb, saveDb } from './models/db.js';
 import { purchaseEmail } from './emails.js';
 import { sendMail } from './mailer.js';
-import { getProduct, productFilePath } from './products.js';
+import { getProduct, productFilePath } from './models/products.js';
 import { HttpError, money, orderCode, signPayload, verifyPayload } from './util.js';
 
 function buildQrPayload(total, code) {
