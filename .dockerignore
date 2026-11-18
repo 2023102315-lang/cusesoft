@@ -1,0 +1,11 @@
+node_modules/
+runtime/
+.runtime/
+dist/
+.git/
+.env
+.env.local
+server/data/db.json
+server/data/outbox/
+server/data/.session-secret
+*.log

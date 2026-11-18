@@ -1,5 +1,8 @@
-# Dependencias
+# Dependencias y runtime portable
 node_modules/
+runtime/
+.runtime/
+dist/
 
 # Configuración y datos locales
 .env
