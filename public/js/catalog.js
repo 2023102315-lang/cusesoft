@@ -167,6 +167,25 @@ function buyNow(productId) {
   openCheckout();
 }
 
+function syncHeroFeatured() {
+  const ids = state.config?.featuredIds;
+  if (!Array.isArray(ids) || !ids.length) return;
+  const featured = ids.map((id) => getProduct(id)).filter(Boolean);
+  if (!featured.length) return;
+
+  ['.float-a', '.float-b'].forEach((selector, idx) => {
+    const card = document.querySelector(selector);
+    const product = featured[idx];
+    if (!card || !product) return;
+    const img = card.querySelector('img');
+    const title = card.querySelector('.float-meta span');
+    const price = card.querySelector('.float-meta strong');
+    if (img && product.cover) img.src = product.cover;
+    if (title) title.textContent = product.name;
+    if (price) price.textContent = formatMoney(product.price);
+  });
+}
+
 export async function initCatalog() {
   skeletonGrid();
 
@@ -220,11 +239,24 @@ export async function initCatalog() {
     }
   });
 
+  document.addEventListener('cs:catalog:refresh', async () => {
+    try {
+      const data = await api.products();
+      setCatalog({ products: data.products || [], categories: data.categories || [] });
+      renderChips();
+      renderGrid();
+      syncHeroFeatured();
+    } catch {
+      // ignore
+    }
+  });
+
   try {
     const data = await api.products();
     setCatalog({ products: data.products || [], categories: data.categories || [] });
     renderChips();
     renderGrid();
+    syncHeroFeatured();
   } catch (error) {
     const grid = $('#productGrid');
     if (grid) {

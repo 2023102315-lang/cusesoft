@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { dataDir } from './config.js';
+import { config, dataDir } from './config.js';
 
 const dbFile = path.join(dataDir, 'db.json');
 
@@ -40,6 +40,13 @@ export function mutate(fn) {
   return result;
 }
 
+export function isAdminUser(user) {
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  const adminEmail = String(config.adminUser || '').trim().toLowerCase();
+  return Boolean(adminEmail && String(user.email || '').trim().toLowerCase() === adminEmail);
+}
+
 export function publicUser(user) {
   if (!user) return null;
   return {
@@ -51,6 +58,7 @@ export function publicUser(user) {
     birthYear: user.birthYear ?? null,
     avatar: user.avatar || null,
     provider: user.provider,
+    isAdmin: isAdminUser(user),
     createdAt: user.createdAt,
   };
 }

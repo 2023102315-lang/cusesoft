@@ -298,6 +298,18 @@ export async function approveOrder(orderId) {
   return { ...result, user: owner };
 }
 
+export function rejectOrder(orderId) {
+  const db = getDb();
+  const order = db.orders.find((candidate) => candidate.id === orderId);
+  if (!order) throw new HttpError(404, 'No encontramos este pedido.', 'ORDER_NOT_FOUND');
+  if (order.status === 'paid') {
+    throw new HttpError(409, 'No puedes rechazar un pedido ya pagado.', 'ORDER_ALREADY_PAID');
+  }
+  order.status = 'expired';
+  saveDb();
+  return { order: publicOrder(order), user: orderOwner(db, order) };
+}
+
 export async function getOrderForUser(userId, orderId) {
   const db = getDb();
   const order = db.orders.find((candidate) => candidate.id === orderId && candidate.userId === userId);

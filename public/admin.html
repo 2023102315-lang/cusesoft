@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>Pedidos · Administración CuseSoft</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <title>Administración · CuseSoft</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
     <script>
       (function () {
         try {
@@ -37,59 +37,336 @@
       <main class="admin-main">
         <section class="admin-card admin-gate" id="gate">
           <span class="eyebrow">Acceso restringido</span>
-          <h1>Panel de pedidos</h1>
+          <h1>Panel de administración</h1>
           <p class="admin-lead">
-            Ingresa el token de administración para revisar los pedidos y aprobar los pagos
-            que quedaron en verificación.
+            Inicia sesión con tus credenciales locales o con el token de administración para gestionar
+            pedidos, productos, usuarios y el estado del sistema.
           </p>
-          <form id="tokenForm" class="admin-token-form" novalidate>
-            <div class="field">
-              <label for="adminToken">Token de administración</label>
-              <input
-                class="input"
-                id="adminToken"
-                name="token"
-                type="password"
-                autocomplete="current-password"
-                placeholder="ADMIN_TOKEN"
-                required
-              >
+
+          <div class="segmented admin-login-switch" role="tablist" aria-label="Método de acceso">
+            <button type="button" class="is-active" data-login-mode="credentials" role="tab" aria-selected="true">
+              Credenciales locales
+            </button>
+            <button type="button" data-login-mode="token" role="tab" aria-selected="false">
+              Token ADMIN_TOKEN
+            </button>
+          </div>
+
+          <form id="loginForm" class="admin-token-form" novalidate>
+            <div id="credsFields" class="admin-login-fields">
+              <div class="field">
+                <label for="adminUsername">Usuario</label>
+                <input
+                  class="input"
+                  id="adminUsername"
+                  name="username"
+                  type="text"
+                  autocomplete="username"
+                  placeholder="admin@gmail.com"
+                  required
+                >
+              </div>
+              <div class="field">
+                <label for="adminPassword">Contraseña</label>
+                <div class="input-wrap">
+                  <input
+                    class="input"
+                    id="adminPassword"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    placeholder="••••••••"
+                    required
+                  >
+                  <button class="password-toggle" type="button" data-toggle-password="adminPassword" aria-label="Mostrar contraseña" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.8" stroke="currentColor" stroke-width="1.7"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="admin-dev-creds" id="devCredsHint" hidden>
+                <div>
+                  <strong>Credenciales locales de prueba</strong>
+                  <span>Usuario: <code id="devUserCode">admin@gmail.com</code> · Contraseña: <code>123456789</code></span>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="fillDevCredsBtn" type="button">Rellenar</button>
+              </div>
             </div>
-            <button class="btn btn-primary" type="submit">Entrar al panel</button>
+
+            <div id="tokenFields" class="admin-login-fields" hidden>
+              <div class="field">
+                <label for="adminToken">Token de administración</label>
+                <div class="input-wrap">
+                  <input
+                    class="input"
+                    id="adminToken"
+                    name="token"
+                    type="password"
+                    autocomplete="off"
+                    placeholder="ADMIN_TOKEN"
+                  >
+                  <button class="password-toggle" type="button" data-toggle-password="adminToken" aria-label="Mostrar token" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.8" stroke="currentColor" stroke-width="1.7"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" id="loginSubmitBtn" type="submit">Entrar al panel</button>
             <p class="admin-error" id="gateError" role="alert" hidden></p>
           </form>
+
           <p class="admin-hint">
-            Define <code>ADMIN_TOKEN</code> en <code>.env</code> y reinicia el servidor.
-            Si no usas aprobación manual, este panel solo sirve para consultar pedidos.
+            Puedes personalizar <code>ADMIN_USER</code>, <code>ADMIN_PASSWORD</code> y <code>ADMIN_TOKEN</code>
+            en <code>.env</code>.
           </p>
         </section>
 
         <section id="panel" hidden>
           <div class="admin-title">
             <div>
-              <span class="eyebrow">CuseSoft</span>
-              <h1>Pedidos</h1>
-              <p class="admin-lead">Revisa los pagos por Yape y aprueba los que estén en verificación.</p>
+              <span class="eyebrow">CuseSoft · Gestión</span>
+              <h1>Panel de control</h1>
+              <p class="admin-lead">Administra pedidos, catálogo de productos, usuarios y estado del sistema.</p>
             </div>
             <div class="admin-actions">
               <button class="btn btn-ghost btn-sm" id="refreshBtn" type="button">Actualizar</button>
-              <button class="btn btn-ghost btn-sm" id="logoutBtn" type="button">Salir</button>>
+              <button class="btn btn-ghost btn-sm" id="logoutBtn" type="button">Salir</button>
             </div>
           </div>
 
-          <div class="admin-stats" id="stats"></div>
+          <nav class="admin-tabs" id="adminTabs" aria-label="Secciones del panel">
+            <button type="button" class="admin-tab is-active" data-tab="overview">Resumen</button>
+            <button type="button" class="admin-tab" data-tab="orders">
+              Pedidos <span class="admin-tab-badge" id="verifyingBadge" hidden>0</span>
+            </button>
+            <button type="button" class="admin-tab" data-tab="products">Productos</button>
+            <button type="button" class="admin-tab" data-tab="users">Usuarios</button>
+            <button type="button" class="admin-tab" data-tab="settings">Configuración y Yape</button>
+          </nav>
 
-          <div class="admin-filters" id="filters" role="group" aria-label="Filtrar pedidos"></div>
+          <!-- Resumen / Sistema -->
+          <div id="tabOverview" class="admin-tab-pane">
+            <div class="admin-stats" id="overviewStats"></div>
+            <div class="admin-overview-grid">
+              <section class="admin-panel-box">
+                <div class="admin-box-head">
+                  <h2>Estado del sistema</h2>
+                  <span class="admin-pill" id="envBadge">development</span>
+                </div>
+                <dl class="admin-kv" id="systemInfo"></dl>
+              </section>
 
-          <div class="admin-orders" id="orders"></div>
-          <p class="admin-empty" id="empty" hidden>No hay pedidos con este filtro.</p>
+              <section class="admin-panel-box">
+                <div class="admin-box-head">
+                  <h2>Accesos rápidos</h2>
+                </div>
+                <div class="admin-quick-actions">
+                  <button class="btn btn-primary btn-sm" type="button" data-goto-tab="orders">Revisar pedidos</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-goto-tab="products">Gestionar productos</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-goto-tab="users">Ver usuarios</button>
+                  <button class="btn btn-ghost btn-sm" type="button" data-goto-tab="settings">Editar Yape y destacados</button>
+                  <a class="btn btn-ghost btn-sm" href="/api/dev/outbox" target="_blank" rel="noopener" id="quickOutboxBtn">
+                    Bandeja de correos ↗
+                  </a>
+                </div>
+                <p class="admin-muted-note">
+                  Los cambios en productos se guardan directamente en <code>server/data/products.json</code> y se reflejan de inmediato en la tienda.
+                </p>
+              </section>
+            </div>
+          </div>
+
+          <!-- Pedidos -->
+          <div id="tabOrders" class="admin-tab-pane" hidden>
+            <div class="admin-stats" id="stats"></div>
+            <div class="admin-toolbar">
+              <div class="admin-filters" id="filters" role="group" aria-label="Filtrar pedidos"></div>
+              <input class="input admin-search" id="ordersSearch" type="search" placeholder="Buscar por ID, cliente, correo o código...">
+            </div>
+            <div class="admin-orders" id="orders"></div>
+            <p class="admin-empty" id="empty" hidden>No hay pedidos con este filtro.</p>
+          </div>
+
+          <!-- Productos -->
+          <div id="tabProducts" class="admin-tab-pane" hidden>
+            <div class="admin-toolbar">
+              <input class="input admin-search" id="productsSearch" type="search" placeholder="Buscar producto o categoría...">
+              <button class="btn btn-primary btn-sm" id="newProductBtn" type="button">+ Nuevo producto</button>
+            </div>
+            <div class="admin-products-grid" id="productsList"></div>
+            <p class="admin-empty" id="productsEmpty" hidden>No hay productos que coincidan.</p>
+          </div>
+
+          <!-- Usuarios -->
+          <div id="tabUsers" class="admin-tab-pane" hidden>
+            <div class="admin-toolbar">
+              <input class="input admin-search" id="usersSearch" type="search" placeholder="Buscar usuario por nombre o correo...">
+              <span class="admin-count-label" id="usersCountLabel"></span>
+            </div>
+            <div class="admin-users-list" id="usersList"></div>
+            <p class="admin-empty" id="usersEmpty" hidden>No hay usuarios registrados.</p>
+          </div>
+
+          <!-- Configuración, Yape y Destacados -->
+          <div id="tabSettings" class="admin-tab-pane" hidden>
+            <form id="settingsForm" class="admin-settings-grid" novalidate>
+              <section class="admin-panel-box">
+                <div class="admin-box-head">
+                  <h2>Datos de Yape</h2>
+                  <span class="admin-pill">Checkout</span>
+                </div>
+                <div class="admin-product-form">
+                  <div class="field">
+                    <label for="setYapeName">Nombre del titular de Yape</label>
+                    <input class="input" id="setYapeName" type="text" placeholder="CuseSoft Store">
+                  </div>
+                  <div class="field">
+                    <label for="setYapePhone">Número de Yape</label>
+                    <input class="input" id="setYapePhone" type="text" placeholder="999 999 999">
+                  </div>
+                  <div class="field">
+                    <label for="setYapeQr">Imagen de QR oficial (opcional)</label>
+                    <input class="input" id="setYapeQr" type="text" placeholder="/assets/yape-qr.png">
+                    <span class="field-hint">Si queda vacío, el checkout genera un QR automático con el monto del pedido.</span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="admin-panel-box">
+                <div class="admin-box-head">
+                  <h2>Tienda y Flujo de pago</h2>
+                </div>
+                <div class="admin-product-form">
+                  <div class="field">
+                    <label for="setStoreName">Nombre de la tienda</label>
+                    <input class="input" id="setStoreName" type="text" placeholder="CuseSoft">
+                  </div>
+                  <div class="field">
+                    <label for="setSupportEmail">Correo de soporte</label>
+                    <input class="input" id="setSupportEmail" type="email" placeholder="soporte@cusesoft.com">
+                  </div>
+                  <label class="admin-check-row">
+                    <input type="checkbox" id="setManualApproval">
+                    <span>
+                      <strong>Aprobación manual de pagos Yape</strong>
+                      <small>Si está activa, los pedidos quedan "En verificación" hasta aprobarlos desde aquí.</small>
+                    </span>
+                  </label>
+                </div>
+              </section>
+
+              <section class="admin-panel-box admin-settings-full">
+                <div class="admin-box-head">
+                  <h2>Productos destacados</h2>
+                  <span class="admin-count-label">Los primeros 2 se muestran en la portada principal</span>
+                </div>
+                <div class="admin-featured-picker" id="featuredPicker"></div>
+                <div class="admin-form-actions" style="margin-top:18px;">
+                  <button class="btn btn-primary" type="submit" id="saveSettingsBtn">Guardar configuración</button>
+                </div>
+              </section>
+            </form>
+          </div>
         </section>
       </main>
 
       <footer class="admin-footer">
         <span>CuseSoft · Panel local de administración</span>
-        <a href="/api/dev/outbox" id="devOutboxLink">Bandeja de correos de desarrollo ↗</a>
+        <a href="/api/dev/outbox" target="_blank" rel="noopener" id="devOutboxLink">Bandeja de correos de desarrollo ↗</a>
       </footer>
+    </div>
+
+    <!-- Modal crear / editar producto -->
+    <div class="modal" id="productEditorModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="productEditorTitle">
+      <div class="modal-panel modal-md">
+        <button class="modal-close" type="button" id="closeProductEditor" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none"><path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        </button>
+        <div class="modal-head">
+          <span class="eyebrow">Catálogo</span>
+          <h2 id="productEditorTitle">Nuevo producto</h2>
+        </div>
+        <form id="productEditorForm" class="admin-product-form" novalidate>
+          <input type="hidden" id="prodId">
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="prodName">Nombre *</label>
+              <input class="input" id="prodName" type="text" required placeholder="Ej. Kit Notion Freelance">
+            </div>
+            <div class="field">
+              <label for="prodCategory">Categoría *</label>
+              <input class="input" id="prodCategory" type="text" required placeholder="Ej. Plantillas">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="prodTagline">Subtítulo corto</label>
+            <input class="input" id="prodTagline" type="text" placeholder="Resumen en una línea">
+          </div>
+
+          <div class="field">
+            <label for="prodDescription">Descripción</label>
+            <textarea class="input" id="prodDescription" rows="3" placeholder="Detalle del producto digital"></textarea>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="prodPrice">Precio (S/) *</label>
+              <input class="input" id="prodPrice" type="number" step="0.10" min="0.1" required placeholder="49.90">
+            </div>
+            <div class="field">
+              <label for="prodCompareAt">Precio anterior (opcional)</label>
+              <input class="input" id="prodCompareAt" type="number" step="0.10" min="0" placeholder="79.90">
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="prodFileName">Archivo descargable</label>
+              <input class="input" id="prodFileName" type="text" list="availableFilesList" placeholder="archivo.zip">
+              <datalist id="availableFilesList"></datalist>
+            </div>
+            <div class="field">
+              <label for="prodFileType">Tipo de archivo</label>
+              <input class="input" id="prodFileType" type="text" placeholder="ZIP, PDF...">
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="prodCover">Ruta de portada</label>
+              <input class="input" id="prodCover" type="text" placeholder="/assets/covers/freelance-os.svg">
+            </div>
+            <div class="field">
+              <label for="prodAccent">Color de acento</label>
+              <input class="input" id="prodAccent" type="color" value="#8b5cf6" style="height:44px;padding:4px 8px;">
+            </div>
+          </div>
+
+          <div class="admin-form-grid">
+            <div class="field">
+              <label for="prodBadge">Badge (opcional)</label>
+              <input class="input" id="prodBadge" type="text" placeholder="Nuevo, Popular...">
+            </div>
+            <div class="field">
+              <label for="prodYoutubeUrl">Video YouTube (opcional)</label>
+              <input class="input" id="prodYoutubeUrl" type="url" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="prodIncludes">Incluye (una línea por elemento)</label>
+            <textarea class="input" id="prodIncludes" rows="3" placeholder="Plantilla editable&#10;Guía en PDF&#10;Actualizaciones"></textarea>
+          </div>
+
+          <p class="admin-error" id="prodFormError" role="alert" hidden></p>
+
+          <div class="admin-form-actions">
+            <button class="btn btn-ghost" type="button" id="cancelProductEditor">Cancelar</button>
+            <button class="btn btn-primary" type="submit" id="saveProductBtn">Guardar producto</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div class="admin-toast" id="toast" role="status" aria-live="polite" hidden></div>

@@ -306,3 +306,116 @@ export function updateBirthYear(user, birthYear) {
   saveDb();
   return user;
 }
+
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(String(password), salt, 64).toString('hex');
+  return `${salt}:${hash}`;
+}
+
+function verifyPassword(password, stored) {
+  const [salt, key] = String(stored || '').split(':');
+  if (!salt || !key) return false;
+  const derived = crypto.scryptSync(String(password || ''), salt, 64);
+  const expected = Buffer.from(key, 'hex');
+  if (derived.length !== expected.length) return false;
+  return crypto.timingSafeEqual(derived, expected);
+}
+
+export function registerWithPassword({ email, password, name, lastName, birthYear }) {
+  const normalized = normalizeEmail(email);
+  if (!isValidEmail(normalized)) {
+    throw new HttpError(400, 'Ingresa un correo electrónico válido.', 'INVALID_EMAIL');
+  }
+  const db = getDb();
+  if (db.users.some((candidate) => candidate.email === normalized)) {
+    throw new HttpError(409, 'Ya existe una cuenta con este correo. Inicia sesión.', 'ACCOUNT_EXISTS');
+  }
+
+  const cleanName = personName(name);
+  const cleanLastName = personName(lastName, 80);
+  const year = Number(birthYear);
+  if (!cleanName || cleanName.length < 2) {
+    throw new HttpError(400, 'Ingresa tu nombre.', 'INVALID_NAME');
+  }
+  if (!cleanLastName || cleanLastName.length < 2) {
+    throw new HttpError(400, 'Ingresa tu apellido.', 'INVALID_LASTNAME');
+  }
+  if (!isAdultBirthYear(year)) {
+    throw new HttpError(400, 'Ingresa un año de nacimiento válido (debes tener al menos 13 años).', 'INVALID_BIRTHYEAR');
+  }
+
+  const rawPassword = String(password || '');
+  if (rawPassword.length < 6 || rawPassword.length > 128) {
+    throw new HttpError(400, 'La contraseña debe tener entre 6 y 128 caracteres.', 'INVALID_PASSWORD');
+  }
+
+  const user = {
+    id: crypto.randomUUID(),
+    email: normalized,
+    name: cleanName,
+    lastName: cleanLastName,
+    birthYear: year,
+    avatar: null,
+    provider: 'email',
+    passwordHash: hashPassword(rawPassword),
+    createdAt: new Date().toISOString(),
+  };
+  db.users.push(user);
+  saveDb();
+  return user;
+}
+
+export function loginWithPassword({ email, password }) {
+  const normalized = normalizeEmail(email);
+  if (!isValidEmail(normalized)) {
+    throw new HttpError(400, 'Ingresa un correo electrónico válido.', 'INVALID_EMAIL');
+  }
+  const rawPassword = String(password || '');
+  if (!rawPassword) {
+    throw new HttpError(400, 'Ingresa tu contraseña.', 'MISSING_PASSWORD');
+  }
+
+  const db = getDb();
+  let user = db.users.find((candidate) => candidate.email === normalized);
+  const adminEmail = normalizeEmail(config.adminUser);
+
+  if (adminEmail && normalized === adminEmail && config.adminPassword && rawPassword === config.adminPassword) {
+    if (!user) {
+      user = {
+        id: crypto.randomUUID(),
+        email: normalized,
+        name: 'Admin',
+        lastName: 'CuseSoft',
+        birthYear: 1995,
+        avatar: null,
+        provider: 'email',
+        role: 'admin',
+        passwordHash: hashPassword(rawPassword),
+        createdAt: new Date().toISOString(),
+      };
+      db.users.push(user);
+      saveDb();
+    } else if (user.role !== 'admin') {
+      user.role = 'admin';
+      saveDb();
+    }
+    return user;
+  }
+
+  if (!user) {
+    throw new HttpError(401, 'Correo o contraseña incorrectos.', 'INVALID_CREDENTIALS');
+  }
+  if (!user.passwordHash) {
+    throw new HttpError(
+      400,
+      'Esta cuenta se registró con Google o sin contraseña. Usa "Continuar con Google".',
+      'GOOGLE_ONLY_ACCOUNT',
+    );
+  }
+  if (!verifyPassword(rawPassword, user.passwordHash)) {
+    throw new HttpError(401, 'Correo o contraseña incorrectos.', 'INVALID_CREDENTIALS');
+  }
+
+  return user;
+}

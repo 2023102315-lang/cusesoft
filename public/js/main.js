@@ -1,5 +1,6 @@
 import { api } from './api.js';
 import { initAccount, openAccount } from './account.js';
+import { initAdminPanel } from './admin-panel.js';
 import { initAuth, openAuth } from './auth.js';
 import { initCart } from './cart.js';
 import { initCatalog } from './catalog.js';
@@ -104,6 +105,7 @@ async function boot() {
   initCart();
   initCheckout();
   initAccount();
+  initAdminPanel();
   setupStaticUi();
 
   const [configResult, meResult] = await Promise.allSettled([api.config(), api.me()]);

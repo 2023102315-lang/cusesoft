@@ -5,7 +5,9 @@ import {
   attachUser,
   endSession,
   loginWithGoogle,
+  loginWithPassword,
   me,
+  registerWithPassword,
   requestOtp,
   requireAuth,
   startSession,
@@ -13,7 +15,7 @@ import {
   verifyOtp,
 } from './auth.js';
 import { config, publicDir } from './config.js';
-import { publicUser } from './db.js';
+import { getDb, isAdminUser, publicUser } from './db.js';
 import { listOutbox, readOutbox } from './mailer.js';
 import {
   approveOrder,
@@ -22,10 +24,27 @@ import {
   getOrderForUser,
   listAllOrders,
   listMyOrders,
+  rejectOrder,
   resolveDownload,
 } from './orders.js';
-import { getCategories, listProducts } from './products.js';
-import { createRateLimiter, escapeHtml, HttpError, normalizeEmail } from './util.js';
+import {
+  createProduct,
+  deleteProduct,
+  getCategories,
+  listAdminProducts,
+  listAvailableFiles,
+  listProducts,
+  updateProduct,
+} from './products.js';
+import { getSettings, updateSettings } from './settings.js';
+import {
+  createRateLimiter,
+  escapeHtml,
+  HttpError,
+  normalizeEmail,
+  signPayload,
+  verifyPayload,
+} from './util.js';
 
 const app = express();
 app.disable('x-powered-by');
@@ -85,23 +104,44 @@ const orderLimiter = createRateLimiter({
   key: (req) => req.user?.id || req.ip,
 });
 
+function safeEquals(a, b) {
+  const hashA = crypto.createHash('sha256').update(String(a || '')).digest();
+  const hashB = crypto.createHash('sha256').update(String(b || '')).digest();
+  return crypto.timingSafeEqual(hashA, hashB);
+}
+
 function requireAdmin(req, _res, next) {
-  if (!config.adminToken) {
+  if (req.user && isAdminUser(req.user)) {
+    req.adminUser = req.user.email;
+    return next();
+  }
+
+  if (!config.adminToken && !config.adminPassword) {
     return next(
       new HttpError(
         503,
-        'El panel de administración no está configurado. Define ADMIN_TOKEN en .env.',
+        'El panel de administración no está configurado. Define ADMIN_TOKEN o ADMIN_PASSWORD en .env.',
         'ADMIN_DISABLED',
       ),
     );
   }
   const provided = String(req.get('x-admin-token') || '');
-  const given = crypto.createHash('sha256').update(provided).digest();
-  const expected = crypto.createHash('sha256').update(config.adminToken).digest();
-  if (!provided || !crypto.timingSafeEqual(given, expected)) {
-    return next(new HttpError(401, 'Token de administración inválido.', 'ADMIN_UNAUTHORIZED'));
+  if (!provided) {
+    return next(new HttpError(401, 'Sesión de administración inválida.', 'ADMIN_UNAUTHORIZED'));
   }
-  return next();
+
+  const session = verifyPayload(provided, config.sessionSecret);
+  if (session && session.role === 'admin') {
+    req.adminUser = session.user || config.adminUser;
+    return next();
+  }
+
+  if (config.adminToken && safeEquals(provided, config.adminToken)) {
+    req.adminUser = 'token';
+    return next();
+  }
+
+  return next(new HttpError(401, 'Credenciales o token de administración inválidos.', 'ADMIN_UNAUTHORIZED'));
 }
 
 app.get('/api/health', (_req, res) => {
@@ -117,8 +157,11 @@ app.get('/api/config', (_req, res) => {
     mailerConfigured: config.mailerConfigured,
     devMode: config.devMode,
     exposeOtp: config.exposeOtp,
-    yape: { name: config.yape.name, phone: config.yape.phone },
+    yape: { name: config.yape.name, phone: config.yape.phone, qrImage: config.yape.qrImage },
+    featuredIds: getSettings().featuredIds,
     supportEmail: config.supportEmail,
+    adminDefaultCredentialsActive: config.adminDefaultCredentialsActive,
+    ...(config.adminDefaultCredentialsActive ? { adminDefaultUser: config.adminUser } : {}),
   });
 });
 
@@ -127,6 +170,27 @@ app.get('/api/products', (_req, res) => {
 });
 
 app.get('/api/auth/me', me);
+
+app.post('/api/auth/register', otpVerifyLimiter, (req, res) => {
+  const user = registerWithPassword({
+    email: req.body?.email,
+    password: req.body?.password,
+    name: req.body?.name,
+    lastName: req.body?.lastName,
+    birthYear: req.body?.birthYear,
+  });
+  startSession(res, user);
+  res.status(201).json({ user: publicUser(user) });
+});
+
+app.post('/api/auth/login', otpVerifyLimiter, (req, res) => {
+  const user = loginWithPassword({
+    email: req.body?.email,
+    password: req.body?.password,
+  });
+  startSession(res, user);
+  res.json({ user: publicUser(user) });
+});
 
 app.post('/api/auth/otp/request', otpRequestLimiter, async (req, res) => {
   const result = await requestOtp({
@@ -179,12 +243,151 @@ app.post('/api/orders/:id/confirm', requireAuth, orderLimiter, async (req, res) 
   res.json(result);
 });
 
+app.post('/api/admin/login', otpVerifyLimiter, (req, res, next) => {
+  if (!config.adminToken && !config.adminPassword) {
+    return next(
+      new HttpError(
+        503,
+        'El panel de administración no está configurado. Define ADMIN_TOKEN o ADMIN_PASSWORD en .env.',
+        'ADMIN_DISABLED',
+      ),
+    );
+  }
+
+  const rawToken = String(req.body?.token || '').trim();
+  if (rawToken) {
+    if (config.adminToken && safeEquals(rawToken, config.adminToken)) {
+      const token = signPayload(
+        { role: 'admin', user: 'token', exp: Date.now() + 24 * 60 * 60 * 1000 },
+        config.sessionSecret,
+      );
+      return res.json({ token, user: 'token' });
+    }
+    return next(new HttpError(401, 'Token de administración inválido.', 'ADMIN_UNAUTHORIZED'));
+  }
+
+  const username = String(req.body?.username || '').trim();
+  const password = String(req.body?.password || '');
+  if (!config.adminPassword || !username || !password) {
+    return next(new HttpError(401, 'Ingresa usuario y contraseña válidos.', 'ADMIN_UNAUTHORIZED'));
+  }
+
+  if (!safeEquals(username, config.adminUser) || !safeEquals(password, config.adminPassword)) {
+    return next(new HttpError(401, 'Usuario o contraseña incorrectos.', 'ADMIN_UNAUTHORIZED'));
+  }
+
+  const token = signPayload(
+    { role: 'admin', user: config.adminUser, exp: Date.now() + 24 * 60 * 60 * 1000 },
+    config.sessionSecret,
+  );
+  return res.json({ token, user: config.adminUser });
+});
+
+app.get('/api/admin/overview', requireAdmin, (_req, res) => {
+  const db = getDb();
+  const orders = listAllOrders();
+  const products = listAdminProducts();
+  const paidOrders = orders.filter((order) => order.status === 'paid');
+  const verifyingOrders = orders.filter((order) => order.status === 'verifying');
+  const revenue = paidOrders.reduce((sum, order) => sum + Number(order.total || 0), 0);
+  const outboxCount = config.devMode || process.env.ALLOW_DEV_OUTBOX === 'true' ? listOutbox().length : 0;
+
+  res.json({
+    adminUser: config.adminUser,
+    stats: {
+      revenue,
+      ordersTotal: orders.length,
+      ordersPaid: paidOrders.length,
+      ordersVerifying: verifyingOrders.length,
+      usersTotal: db.users.length,
+      productsTotal: products.length,
+      filesTotal: listAvailableFiles().length,
+      outboxCount,
+    },
+    system: {
+      env: config.env,
+      storeName: config.storeName,
+      appUrl: config.appUrl,
+      devMode: config.devMode,
+      mailerConfigured: config.mailerConfigured,
+      requireManualApproval: config.requireManualApproval,
+      googleEnabled: Boolean(config.googleClientId),
+      adminTokenConfigured: Boolean(config.adminToken),
+      adminDefaultCredentialsActive: config.adminDefaultCredentialsActive,
+      yape: { name: config.yape.name, phone: config.yape.phone },
+    },
+  });
+});
+
 app.get('/api/admin/orders', requireAdmin, (_req, res) => {
   res.json({ orders: listAllOrders() });
 });
 
 app.post('/api/admin/orders/:id/approve', requireAdmin, async (req, res) => {
   res.json(await approveOrder(req.params.id));
+});
+
+app.post('/api/admin/orders/:id/reject', requireAdmin, (req, res) => {
+  res.json(rejectOrder(req.params.id));
+});
+
+app.get('/api/admin/products', requireAdmin, (_req, res) => {
+  res.json({
+    products: listAdminProducts(),
+    categories: getCategories(),
+    files: listAvailableFiles(),
+  });
+});
+
+app.post('/api/admin/products', requireAdmin, (req, res) => {
+  const product = createProduct(req.body);
+  res.status(201).json({ product });
+});
+
+app.patch('/api/admin/products/:id', requireAdmin, (req, res) => {
+  const product = updateProduct(req.params.id, req.body);
+  res.json({ product });
+});
+
+app.delete('/api/admin/products/:id', requireAdmin, (req, res) => {
+  res.json(deleteProduct(req.params.id));
+});
+
+app.get('/api/admin/settings', requireAdmin, (_req, res) => {
+  res.json({ settings: getSettings() });
+});
+
+app.patch('/api/admin/settings', requireAdmin, (req, res) => {
+  const settings = updateSettings(req.body);
+  res.json({ settings });
+});
+
+app.get('/api/admin/users', requireAdmin, (_req, res) => {
+  const db = getDb();
+  const ordersByUser = new Map();
+  for (const order of db.orders) {
+    const current = ordersByUser.get(order.userId) || { count: 0, paidCount: 0, spent: 0 };
+    current.count += 1;
+    if (order.status === 'paid') {
+      current.paidCount += 1;
+      current.spent += Number(order.total || 0);
+    }
+    ordersByUser.set(order.userId, current);
+  }
+
+  const users = [...db.users]
+    .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+    .map((user) => {
+      const summary = ordersByUser.get(user.id) || { count: 0, paidCount: 0, spent: 0 };
+      return {
+        ...publicUser(user),
+        ordersCount: summary.count,
+        paidOrdersCount: summary.paidCount,
+        totalSpent: summary.spent,
+      };
+    });
+
+  res.json({ users });
 });
 
 app.get('/admin', (_req, res) => {

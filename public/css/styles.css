@@ -1811,6 +1811,38 @@ ol {
   box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.14);
 }
 
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap .input {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--muted);
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.password-toggle:hover {
+  color: var(--text);
+  background: var(--glass-3);
+}
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
 .input[aria-invalid="true"] {
   border-color: rgba(251, 113, 133, 0.7);
 }

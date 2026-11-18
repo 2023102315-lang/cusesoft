@@ -42,10 +42,13 @@ const smtp = {
 };
 const smtpConfigured = Boolean(smtp.host && smtp.user);
 
+const env = process.env.NODE_ENV || 'development';
+const adminPassword = process.env.ADMIN_PASSWORD || (env !== 'production' ? '123456789' : '');
+
 export const config = {
   port,
   host,
-  env: process.env.NODE_ENV || 'development',
+  env,
   appUrl: (process.env.APP_URL || `http://localhost:${port}`).replace(/\/+$/, ''),
   storeName: process.env.STORE_NAME || 'CuseSoft',
   supportEmail: process.env.SUPPORT_EMAIL || 'soporte@cusesoft.com',
@@ -76,4 +79,8 @@ export const config = {
   exposeOtp: smtpConfigured ? process.env.DEV_EXPOSE_OTP === 'true' : process.env.DEV_EXPOSE_OTP !== 'false',
   requireManualApproval: process.env.REQUIRE_MANUAL_APPROVAL === 'true',
   adminToken: process.env.ADMIN_TOKEN || '',
+  adminUser: process.env.ADMIN_USER || 'admin@gmail.com',
+  adminPassword,
+  adminDefaultCredentialsActive:
+    env !== 'production' && (!process.env.ADMIN_PASSWORD || process.env.ADMIN_PASSWORD === '123456789'),
 };

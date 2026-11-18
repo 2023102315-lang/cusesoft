@@ -8,6 +8,8 @@ const auth = {
   mode: 'login',
   intent: null,
   email: '',
+  password: '',
+  confirmPassword: '',
   name: '',
   lastName: '',
   birthYear: '',
@@ -32,6 +34,8 @@ function currentFormValues() {
   const form = $('#authForm');
   if (!form) return;
   auth.email = String(form.email?.value || auth.email).trim();
+  if (form.password) auth.password = form.password.value;
+  if (form.confirmPassword) auth.confirmPassword = form.confirmPassword.value;
   if (form.firstName) auth.name = form.firstName.value.trim();
   if (form.lastName) auth.lastName = form.lastName.value.trim();
   if (form.birthYear) auth.birthYear = form.birthYear.value.trim();
@@ -50,6 +54,11 @@ function googleBlock() {
     </div>`;
 }
 
+const EYE_OPEN =
+  '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5S21.5 12 21.5 12s-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.8" stroke="currentColor" stroke-width="1.7"/></svg>';
+const EYE_CLOSED =
+  '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 3 18 18M10.6 5.7A9.4 9.4 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a16.8 16.8 0 0 1-3.3 4.3M6.7 7.1A16.5 16.5 0 0 0 2.5 12s3.5 6.5 9.5 6.5c1.6 0 3-.4 4.2-1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+
 function authErrorBox() {
   return `<div class="form-error" id="authError" role="alert" ${auth.error ? '' : 'hidden'}>${esc(auth.error)}</div>`;
 }
@@ -65,8 +74,8 @@ function formView() {
         buying
           ? 'Inicia sesión o crea una cuenta para completar tu compra. Tu carrito se conserva.'
           : isSignup
-            ? 'Regístrate con tu correo. Te enviaremos un código de 6 dígitos para verificarlo.'
-            : 'Ingresa con tu correo. Te enviaremos un código de un solo uso, sin contraseñas.'
+            ? 'Regístrate con tu correo y crea una contraseña, o continúa con Google.'
+            : 'Ingresa con tu correo y contraseña, o continúa con Google.'
       }</p>
     </div>
 
@@ -102,9 +111,27 @@ function formView() {
         <label for="authEmail">Correo electrónico</label>
         <input class="input" id="authEmail" name="email" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" value="${esc(auth.email)}" required>
       </div>
+      <div class="field">
+        <label for="authPassword">Contraseña</label>
+        <div class="input-wrap">
+          <input class="input" id="authPassword" name="password" type="password" autocomplete="${isSignup ? 'new-password' : 'current-password'}" minlength="6" placeholder="${isSignup ? 'Mínimo 6 caracteres' : 'Tu contraseña'}" required>
+          <button class="password-toggle" type="button" data-toggle-password="authPassword" aria-label="Mostrar contraseña" aria-pressed="false">${EYE_OPEN}</button>
+        </div>
+      </div>
+      ${
+        isSignup
+          ? `<div class="field">
+              <label for="authPasswordConfirm">Confirmar contraseña</label>
+              <div class="input-wrap">
+                <input class="input" id="authPasswordConfirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Repite tu contraseña" required>
+                <button class="password-toggle" type="button" data-toggle-password="authPasswordConfirm" aria-label="Mostrar contraseña" aria-pressed="false">${EYE_OPEN}</button>
+              </div>
+            </div>`
+          : ''
+      }
       ${authErrorBox()}
       <button class="btn btn-primary btn-block" type="submit" id="authSubmit">
-        ${isSignup ? 'Crear cuenta y enviar código' : 'Enviar código de acceso'}
+        ${isSignup ? 'Crear cuenta' : 'Iniciar sesión'}
       </button>
     </form>
     <p class="form-note">Al continuar aceptas nuestros términos y la política de privacidad. Nunca te pediremos tu contraseña de Yape.</p>
@@ -189,7 +216,7 @@ function setBusy(button, busy, busyText) {
   }
 }
 
-function validateForm({ email, name, lastName, birthYear, signup }) {
+function validateForm({ email, password, confirmPassword, name, lastName, birthYear, signup }) {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(email)) {
     return 'Ingresa un correo electrónico válido.';
   }
@@ -200,6 +227,14 @@ function validateForm({ email, name, lastName, birthYear, signup }) {
     if (!Number.isInteger(year) || year < 1900 || year > new Date().getFullYear() - 13) {
       return 'Ingresa un año de nacimiento válido (mínimo 13 años).';
     }
+    if (!password || password.length < 6) {
+      return 'La contraseña debe tener al menos 6 caracteres.';
+    }
+    if (password !== confirmPassword) {
+      return 'Las contraseñas no coinciden.';
+    }
+  } else if (!password) {
+    return 'Ingresa tu contraseña.';
   }
   return '';
 }
@@ -210,6 +245,8 @@ async function submitForm() {
   const signup = auth.tab === 'signup';
   const problem = validateForm({
     email: auth.email,
+    password: auth.password,
+    confirmPassword: auth.confirmPassword,
     name: auth.name,
     lastName: auth.lastName,
     birthYear: auth.birthYear,
@@ -221,38 +258,31 @@ async function submitForm() {
   }
 
   const button = $('#authSubmit');
-  setBusy(button, true, 'Enviando código...');
+  setBusy(button, true, signup ? 'Creando cuenta...' : 'Iniciando sesión...');
   auth.error = '';
 
   try {
-    const result = await api.requestOtp({
-      mode: auth.tab,
-      email: auth.email,
-      ...(signup ? { name: auth.name, lastName: auth.lastName, birthYear: auth.birthYear } : {}),
-    });
-    auth.mode = auth.tab;
-    auth.email = result.email || auth.email;
-    auth.devCode = result.devCode || '';
-    auth.error = '';
-    auth.step = 'otp';
-    render();
-    startResendTimer(Math.max(1, Math.ceil((result.resendAt - Date.now()) / 1000)));
-    toast('Código enviado. Revisa tu correo.', 'success', 'Verifica tu correo');
+    const result = signup
+      ? await api.register({
+          email: auth.email,
+          password: auth.password,
+          name: auth.name,
+          lastName: auth.lastName,
+          birthYear: auth.birthYear,
+        })
+      : await api.login({
+          email: auth.email,
+          password: auth.password,
+        });
+    auth.password = '';
+    auth.confirmPassword = '';
+    completeLogin(result.user);
   } catch (error) {
     if (error.code === 'ACCOUNT_EXISTS') {
       auth.tab = 'login';
       auth.error = error.message;
       render();
       return;
-    }
-    if (error.code === 'ACCOUNT_NOT_FOUND') {
-      auth.tab = 'signup';
-      auth.error = error.message;
-      render();
-      return;
-    }
-    if (error.code === 'RESEND_COOLDOWN' && error.data?.retryAfter) {
-      startResendTimer(error.data.retryAfter);
     }
     showError(error.message);
   } finally {
@@ -511,6 +541,18 @@ export function initAuth() {
   if (!body) return;
 
   body.addEventListener('click', (event) => {
+    const toggleBtn = event.target.closest('[data-toggle-password]');
+    if (toggleBtn) {
+      const input = document.getElementById(toggleBtn.dataset.togglePassword);
+      if (!input) return;
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      toggleBtn.innerHTML = show ? EYE_CLOSED : EYE_OPEN;
+      toggleBtn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+      toggleBtn.setAttribute('aria-pressed', String(show));
+      return;
+    }
+
     const tabButton = event.target.closest('[data-auth-tab]');
     if (tabButton) {
       currentFormValues();
