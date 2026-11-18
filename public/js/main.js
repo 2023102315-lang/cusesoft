@@ -5,6 +5,7 @@ import { initCart } from './cart.js';
 import { initCatalog } from './catalog.js';
 import { initCheckout } from './checkout.js';
 import { setUser, state, subscribe } from './state.js';
+import { initTheme } from './theme.js';
 import { $, esc, icons, initUi, initials, toast } from './ui.js';
 
 function renderHeaderAccount() {
@@ -97,6 +98,7 @@ function setupStaticUi() {
 }
 
 async function boot() {
+  initTheme();
   initUi();
   initAuth();
   initCart();

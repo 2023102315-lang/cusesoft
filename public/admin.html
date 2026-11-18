@@ -6,6 +6,16 @@
     <meta name="robots" content="noindex, nofollow">
     <title>Pedidos · Administración CuseSoft</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('cusesoft_theme_v1');
+          if (t === 'light' || t === 'dark') {
+            document.documentElement.setAttribute('data-theme', t);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="stylesheet" href="/css/admin.css">
   </head>
@@ -16,7 +26,12 @@
           <span class="brand-mark admin-brand-mark" aria-hidden="true">CS</span>
           <span class="brand-text">CuseSoft <span>Admin</span></span>
         </a>
-        <a class="btn btn-ghost btn-sm" href="/">Ir a la tienda</a>
+        <div class="header-actions">
+          <button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar a tema claro" title="Cambiar a tema claro">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+          <a class="btn btn-ghost btn-sm" href="/">Ir a la tienda</a>
+        </div>
       </header>
 
       <main class="admin-main">

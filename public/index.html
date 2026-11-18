@@ -7,6 +7,20 @@
   <title>CuseSoft Store — Productos digitales con entrega inmediata</title>
   <meta name="description" content="Plantillas, cursos y recursos digitales de CuseSoft. Paga con Yape, confirma tu operación y descarga al instante.">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('cusesoft_theme_v1');
+        if (t === 'light' || t === 'dark') {
+          document.documentElement.setAttribute('data-theme', t);
+          if (t === 'light') {
+            var m = document.querySelector('meta[name="theme-color"]');
+            if (m) m.setAttribute('content', '#f7f5fc');
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
@@ -34,6 +48,9 @@
       </nav>
 
       <div class="header-actions">
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="Cambiar a tema claro" title="Cambiar a tema claro">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
         <button class="account-btn" id="accountBtn" type="button" aria-haspopup="dialog">
           <span class="account-ico" id="accountIcon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c.7-3.6 3.6-5.6 7-5.6s6.3 2 7 5.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>

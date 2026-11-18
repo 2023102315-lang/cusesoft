@@ -1,3 +1,5 @@
+import { initTheme } from './theme.js';
+
 const TOKEN_KEY = 'cusesoft_admin_token_v1';
 
 const STATUS_LABELS = {
@@ -280,6 +282,7 @@ $('#logoutBtn').addEventListener('click', () => {
 });
 
 async function init() {
+  initTheme();
   fetch('/api/config')
     .then((response) => response.json())
     .then((config) => {

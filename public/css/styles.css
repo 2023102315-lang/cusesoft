@@ -1,4 +1,4 @@
-/* =========================================================
+﻿/* =========================================================
    CuseSoft Store — hoja de estilos
    ========================================================= */
 
@@ -16,11 +16,35 @@
   --primary: #8b5cf6;
   --primary-2: #d946ef;
   --primary-soft: rgba(139, 92, 246, 0.14);
+  --primary-text: #c4b5fd;
+  --primary-text-soft: #ddd6fe;
   --accent: #a3e635;
   --accent-soft: rgba(163, 230, 53, 0.12);
+  --accent-text: #d9f99d;
+  --info-text: #bfdbfe;
   --success: #34d399;
   --danger: #fb7185;
+  --danger-text: #fecdd3;
   --warning: #fbbf24;
+  --warning-text: #fde68a;
+  --header-scrolled: rgba(7, 6, 13, 0.78);
+  --footer-bg: rgba(5, 4, 10, 0.6);
+  --drawer-bg: #0c0916;
+  --modal-bg: #0d0a17;
+  --scrim-bg: rgba(4, 3, 9, 0.66);
+  --modal-backdrop: rgba(4, 3, 9, 0.74);
+  --input-bg: rgba(4, 3, 9, 0.55);
+  --segmented-bg: rgba(4, 3, 9, 0.45);
+  --surface-glass: rgba(16, 13, 26, 0.92);
+  --surface-glass-strong: rgba(16, 13, 26, 0.96);
+  --close-bg: rgba(10, 8, 18, 0.7);
+  --glass-1: rgba(255, 255, 255, 0.015);
+  --glass-2: rgba(255, 255, 255, 0.025);
+  --glass-3: rgba(255, 255, 255, 0.04);
+  --glass-4: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.09);
+  --grad-text: linear-gradient(115deg, #c4b5fd 0%, #a78bfa 35%, #f0abfc 70%, #a3e635 115%);
+  --glow-opacity: 0.5;
   --radius: 24px;
   --radius-md: 16px;
   --radius-sm: 12px;
@@ -28,6 +52,54 @@
   --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.35);
   --font: "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
   --mono: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f7f5fc;
+  --bg-soft: #efecf8;
+  --surface: #ffffff;
+  --surface-2: #f4f1fb;
+  --surface-3: #ebe5f7;
+  --border: rgba(24, 16, 48, 0.1);
+  --border-strong: rgba(24, 16, 48, 0.2);
+  --text: #161124;
+  --muted: #554c70;
+  --muted-2: #776e94;
+  --primary: #7c3aed;
+  --primary-2: #c026d3;
+  --primary-soft: rgba(124, 58, 237, 0.1);
+  --primary-text: #6d28d9;
+  --primary-text-soft: #5b21b6;
+  --accent: #65a30d;
+  --accent-soft: rgba(101, 163, 13, 0.14);
+  --accent-text: #3f6212;
+  --info-text: #1d4ed8;
+  --success: #059669;
+  --danger: #e11d48;
+  --danger-text: #be123c;
+  --warning: #d97706;
+  --warning-text: #92400e;
+  --header-scrolled: rgba(247, 245, 252, 0.85);
+  --footer-bg: rgba(239, 236, 248, 0.85);
+  --drawer-bg: #ffffff;
+  --modal-bg: #ffffff;
+  --scrim-bg: rgba(24, 16, 48, 0.42);
+  --modal-backdrop: rgba(24, 16, 48, 0.48);
+  --input-bg: #ffffff;
+  --segmented-bg: rgba(24, 16, 48, 0.05);
+  --surface-glass: rgba(255, 255, 255, 0.92);
+  --surface-glass-strong: rgba(255, 255, 255, 0.98);
+  --close-bg: rgba(255, 255, 255, 0.88);
+  --glass-1: rgba(24, 16, 48, 0.02);
+  --glass-2: rgba(24, 16, 48, 0.03);
+  --glass-3: rgba(24, 16, 48, 0.045);
+  --glass-4: rgba(24, 16, 48, 0.08);
+  --glass-hover: rgba(24, 16, 48, 0.09);
+  --grad-text: linear-gradient(115deg, #6d28d9 0%, #7c3aed 38%, #c026d3 72%, #65a30d 115%);
+  --glow-opacity: 0.24;
+  --shadow-lg: 0 24px 64px rgba(24, 16, 48, 0.12);
+  --shadow-md: 0 12px 32px rgba(24, 16, 48, 0.08);
 }
 
 *,
@@ -119,7 +191,7 @@ ol {
   position: absolute;
   border-radius: 50%;
   filter: blur(90px);
-  opacity: 0.5;
+  opacity: var(--glow-opacity);
 }
 
 .glow-a {
@@ -180,7 +252,7 @@ ol {
 }
 
 .grad-text {
-  background: linear-gradient(115deg, #c4b5fd 0%, #a78bfa 35%, #f0abfc 70%, #a3e635 115%);
+  background: var(--grad-text);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -263,20 +335,20 @@ ol {
 }
 
 .btn-ghost {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-3);
   border-color: var(--border);
   color: var(--text);
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--glass-4);
   border-color: var(--border-strong);
 }
 
 .btn-danger {
   background: rgba(251, 113, 133, 0.12);
   border-color: rgba(251, 113, 133, 0.3);
-  color: #fecdd3;
+  color: var(--danger-text);
 }
 
 .btn-lg {
@@ -301,7 +373,7 @@ ol {
   height: 38px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-3);
   color: var(--muted);
   transition: color 0.2s, background-color 0.2s, border-color 0.2s;
 }
@@ -313,7 +385,7 @@ ol {
 
 .icon-btn:hover {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.09);
+  background: var(--glass-hover);
   border-color: var(--border-strong);
 }
 
@@ -328,7 +400,7 @@ ol {
 }
 
 .site-header.is-scrolled {
-  background: rgba(7, 6, 13, 0.78);
+  background: var(--header-scrolled);
   border-bottom-color: var(--border);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
@@ -400,6 +472,34 @@ ol {
   gap: 10px;
 }
 
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--glass-3);
+  color: var(--text);
+  transition: background-color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.theme-btn:hover {
+  background: var(--glass-hover);
+  border-color: var(--border-strong);
+}
+
+.theme-btn svg {
+  width: 19px;
+  height: 19px;
+  transition: transform 0.25s ease;
+}
+
+.theme-btn:hover svg {
+  transform: rotate(15deg);
+}
+
 .account-btn {
   display: inline-flex;
   align-items: center;
@@ -407,7 +507,7 @@ ol {
   padding: 8px 14px 8px 9px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-3);
   color: var(--text);
   font-size: 13px;
   font-weight: 600;
@@ -415,7 +515,7 @@ ol {
 }
 
 .account-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--glass-4);
   border-color: var(--border-strong);
 }
 
@@ -427,7 +527,7 @@ ol {
   height: 28px;
   border-radius: 50%;
   background: rgba(139, 92, 246, 0.18);
-  color: #c4b5fd;
+  color: var(--primary-text);
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -466,13 +566,13 @@ ol {
   height: 42px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-3);
   color: var(--text);
   transition: background-color 0.2s, border-color 0.2s;
 }
 
 .cart-btn:hover {
-  background: rgba(255, 255, 255, 0.09);
+  background: var(--glass-hover);
   border-color: var(--border-strong);
 }
 
@@ -594,8 +694,8 @@ ol {
   width: 238px;
   padding: 10px;
   border-radius: 20px;
-  background: rgba(19, 16, 30, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow-lg);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -650,8 +750,8 @@ ol {
   gap: 10px;
   padding: 11px 14px;
   border-radius: 15px;
-  background: rgba(16, 13, 26, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--surface-glass);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
   backdrop-filter: blur(14px);
 }
@@ -727,7 +827,7 @@ ol {
   padding: 6px;
   border: 1px solid var(--border);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01));
+  background: linear-gradient(180deg, var(--glass-2), var(--glass-1));
 }
 
 .trust-item {
@@ -749,7 +849,7 @@ ol {
   height: 38px;
   border-radius: 12px;
   background: rgba(139, 92, 246, 0.12);
-  color: #c4b5fd;
+  color: var(--primary-text);
   flex-shrink: 0;
 }
 
@@ -818,7 +918,7 @@ ol {
   padding: 12px 16px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--glass-2);
   color: var(--muted-2);
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
 }
@@ -862,7 +962,7 @@ ol {
   padding: 9px 16px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-2);
   color: var(--muted);
   font-size: 12.5px;
   font-weight: 600;
@@ -895,7 +995,7 @@ ol {
   flex-direction: column;
   border-radius: 24px;
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.012));
+  background: linear-gradient(180deg, var(--glass-3), var(--glass-1));
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s, box-shadow 0.3s;
@@ -980,7 +1080,7 @@ ol {
 }
 
 .product-link:hover {
-  color: #ddd6fe;
+  color: var(--primary-text-soft);
 }
 
 .product-tagline {
@@ -1027,7 +1127,7 @@ ol {
   padding: 8px 13px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-3);
   color: var(--text);
   font-size: 12px;
   font-weight: 700;
@@ -1066,11 +1166,11 @@ ol {
   border-radius: 24px;
   border: 1px solid var(--border);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass-2);
 }
 
 .skeleton {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.09) 37%, rgba(255, 255, 255, 0.04) 63%);
+  background: linear-gradient(90deg, var(--glass-3) 25%, var(--glass-hover) 37%, var(--glass-3) 63%);
   background-size: 400% 100%;
   animation: shimmer 1.4s ease infinite;
 }
@@ -1098,7 +1198,7 @@ ol {
   text-align: center;
   border: 1px dashed var(--border-strong);
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.015);
+  background: var(--glass-1);
 }
 
 .empty-ico {
@@ -1108,7 +1208,7 @@ ol {
   height: 54px;
   border-radius: 50%;
   background: var(--primary-soft);
-  color: #c4b5fd;
+  color: var(--primary-text);
   font-size: 26px;
   margin-bottom: 14px;
 }
@@ -1137,7 +1237,7 @@ ol {
   padding: 26px 22px 24px;
   border-radius: 22px;
   border: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.012));
+  background: linear-gradient(180deg, var(--glass-3), var(--glass-1));
   overflow: hidden;
 }
 
@@ -1185,7 +1285,7 @@ ol {
   border: 1px solid rgba(139, 92, 246, 0.24);
   background:
     radial-gradient(420px 160px at 10% 20%, rgba(139, 92, 246, 0.16), transparent 70%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+    linear-gradient(180deg, var(--glass-3), var(--glass-1));
 }
 
 .info-band-copy {
@@ -1209,9 +1309,9 @@ ol {
   flex-shrink: 0;
   padding: 9px 15px;
   border-radius: 999px;
-  border: 1px solid rgba(163, 230, 53, 0.28);
+  border: 1px solid rgba(101, 163, 13, 0.34);
   background: var(--accent-soft);
-  color: #d9f99d;
+  color: var(--accent-text);
   font-size: 11.5px;
   font-weight: 700;
 }
@@ -1285,7 +1385,7 @@ ol {
 .accordion details[open] summary::after {
   transform: rotate(45deg);
   background: var(--primary-soft);
-  color: #ddd6fe;
+  color: var(--primary-text-soft);
 }
 
 .accordion details p {
@@ -1313,7 +1413,7 @@ ol {
   background:
     radial-gradient(600px 240px at 80% 120%, rgba(217, 70, 239, 0.22), transparent 70%),
     radial-gradient(500px 220px at 5% -20%, rgba(139, 92, 246, 0.28), transparent 70%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+    linear-gradient(180deg, var(--glass-3), var(--glass-1));
   overflow: hidden;
 }
 
@@ -1332,7 +1432,7 @@ ol {
 .site-footer {
   margin-top: 40px;
   border-top: 1px solid var(--border);
-  background: rgba(5, 4, 10, 0.6);
+  background: var(--footer-bg);
   padding: 54px 0 26px;
 }
 
@@ -1407,7 +1507,7 @@ ol {
   position: fixed;
   inset: 0;
   z-index: 85;
-  background: rgba(4, 3, 9, 0.66);
+  background: var(--scrim-bg);
   backdrop-filter: blur(4px);
   opacity: 0;
   transition: opacity 0.3s;
@@ -1426,7 +1526,7 @@ ol {
   flex-direction: column;
   width: min(434px, 100%);
   height: 100dvh;
-  background: #0c0916;
+  background: var(--drawer-bg);
   border-left: 1px solid var(--border);
   box-shadow: -30px 0 80px rgba(0, 0, 0, 0.55);
   transform: translateX(105%);
@@ -1462,7 +1562,7 @@ ol {
 .drawer-foot {
   padding: 20px 24px 24px;
   border-top: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass-2);
 }
 
 .total-row {
@@ -1562,7 +1662,7 @@ ol {
 }
 
 .cart-remove:hover {
-  color: #fecdd3;
+  color: var(--danger-text);
   background: rgba(251, 113, 133, 0.12);
 }
 
@@ -1581,7 +1681,7 @@ ol {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(4, 3, 9, 0.74);
+  background: var(--modal-backdrop);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   opacity: 0;
@@ -1604,7 +1704,7 @@ ol {
   border: 1px solid var(--border-strong);
   background:
     radial-gradient(500px 200px at 100% 0%, rgba(139, 92, 246, 0.1), transparent 70%),
-    #0d0a17;
+    var(--modal-bg);
   box-shadow: var(--shadow-lg);
   transform: translateY(16px) scale(0.985);
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -1629,7 +1729,7 @@ ol {
   height: 34px;
   border-radius: 50%;
   border: 1px solid var(--border);
-  background: rgba(10, 8, 18, 0.7);
+  background: var(--close-bg);
   color: var(--muted);
   backdrop-filter: blur(8px);
   transition: color 0.2s, background-color 0.2s;
@@ -1637,7 +1737,7 @@ ol {
 
 .modal-close:hover {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--glass-4);
 }
 
 .modal-close svg {
@@ -1694,7 +1794,7 @@ ol {
   padding: 12px 14px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgba(4, 3, 9, 0.55);
+  background: var(--input-bg);
   color: var(--text);
   font: inherit;
   font-size: 14px;
@@ -1732,7 +1832,7 @@ select.input {
   border-radius: 10px;
   border: 1px solid rgba(251, 113, 133, 0.25);
   background: rgba(251, 113, 133, 0.1);
-  color: #fecdd3;
+  color: var(--danger-text);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -1749,7 +1849,7 @@ select.input {
 }
 
 .form-note a {
-  color: #c4b5fd;
+  color: var(--primary-text);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -1786,7 +1886,7 @@ select.input {
   margin-bottom: 20px;
   border-radius: 13px;
   border: 1px solid var(--border);
-  background: rgba(4, 3, 9, 0.45);
+  background: var(--segmented-bg);
 }
 
 .segmented button {
@@ -1847,7 +1947,7 @@ select.input {
 .google-note {
   padding: 8px 10px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-2);
   color: var(--muted-2);
   font-size: 10.5px;
   line-height: 1.5;
@@ -1885,7 +1985,7 @@ select.input {
   padding: 6px 11px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-3);
   color: var(--text);
   font-size: 12px;
   font-weight: 600;
@@ -1904,7 +2004,7 @@ select.input {
   height: 58px;
   border-radius: 11px;
   border: 1px solid var(--border);
-  background: rgba(4, 3, 9, 0.55);
+  background: var(--input-bg);
   color: var(--text);
   font-family: var(--mono);
   font-size: 22px;
@@ -1932,9 +2032,9 @@ select.input {
   margin-top: 4px;
   padding: 9px 12px;
   border-radius: 10px;
-  border: 1px dashed rgba(163, 230, 53, 0.35);
-  background: rgba(163, 230, 53, 0.07);
-  color: #d9f99d;
+  border: 1px dashed rgba(101, 163, 13, 0.4);
+  background: var(--accent-soft);
+  color: var(--accent-text);
   font-size: 11px;
   line-height: 1.5;
 }
@@ -1947,7 +2047,7 @@ select.input {
 
 .link-btn {
   padding: 0;
-  color: #c4b5fd;
+  color: var(--primary-text);
   font-size: 12px;
   font-weight: 600;
   text-decoration: underline;
@@ -1955,7 +2055,7 @@ select.input {
 }
 
 .link-btn:hover {
-  color: #ede9fe;
+  color: var(--text);
 }
 
 .auth-links {
@@ -2045,7 +2145,7 @@ select.input {
   padding: 6px 10px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-2);
   color: var(--muted);
   font-size: 10.5px;
   font-weight: 600;
@@ -2102,7 +2202,7 @@ select.input {
   padding: 11px 13px;
   border-radius: 10px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--glass-2);
   color: var(--muted-2);
   font-size: 10.5px;
   line-height: 1.55;
@@ -2112,7 +2212,7 @@ select.input {
   width: 15px;
   height: 15px;
   flex-shrink: 0;
-  color: #c4b5fd;
+  color: var(--primary-text);
 }
 
 /* Checkout -------------------------------------------------------- */
@@ -2182,7 +2282,7 @@ select.input {
   padding: 22px;
   border-radius: 22px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--glass-2);
   text-align: center;
 }
 
@@ -2258,7 +2358,7 @@ select.input {
 .checkout-summary {
   border-radius: 18px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass-2);
   overflow: hidden;
 }
 
@@ -2285,7 +2385,7 @@ select.input {
   justify-content: space-between;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--glass-3);
   font-size: 12px;
 }
 
@@ -2328,7 +2428,7 @@ select.input {
   padding: 16px 18px;
   border-radius: 16px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass-2);
 }
 
 .pay-instructions h3 {
@@ -2362,7 +2462,7 @@ select.input {
   height: 19px;
   border-radius: 50%;
   background: var(--primary-soft);
-  color: #ddd6fe;
+  color: var(--primary-text-soft);
   font-size: 9.5px;
   font-weight: 700;
   flex-shrink: 0;
@@ -2385,7 +2485,7 @@ select.input {
   padding: 5px 9px;
   border-radius: 7px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-2);
   font-family: var(--mono);
   font-size: 10.5px;
   color: var(--muted);
@@ -2397,8 +2497,8 @@ select.input {
   gap: 6px;
   padding: 5px 9px;
   border-radius: 7px;
-  background: rgba(251, 191, 36, 0.1);
-  color: #fcd34d;
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--warning-text);
   font-family: var(--mono);
   font-size: 10.5px;
   font-weight: 700;
@@ -2487,7 +2587,7 @@ select.input {
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-2);
   color: var(--muted);
   font-size: 11px;
 }
@@ -2513,7 +2613,7 @@ select.input {
   padding: 14px 16px;
   border-radius: 14px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--glass-2);
 }
 
 .download-item strong {
@@ -2550,7 +2650,7 @@ select.input {
   margin-top: 16px;
   padding: 10px 12px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--glass-2);
   color: var(--muted-2);
   font-size: 10px;
   line-height: 1.5;
@@ -2580,7 +2680,7 @@ select.input {
   padding: 18px;
   border-radius: 16px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.025);
+  background: var(--glass-2);
   margin-bottom: 22px;
 }
 
@@ -2650,7 +2750,7 @@ select.input {
   padding: 14px 16px;
   border-radius: 14px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--glass-2);
 }
 
 .order-card-head {
@@ -2679,26 +2779,26 @@ select.input {
 
 .status-paid {
   background: var(--accent-soft);
-  color: #d9f99d;
-  border: 1px solid rgba(163, 230, 53, 0.28);
+  color: var(--accent-text);
+  border: 1px solid rgba(101, 163, 13, 0.32);
 }
 
 .status-pending {
-  background: rgba(251, 191, 36, 0.1);
-  color: #fcd34d;
-  border: 1px solid rgba(251, 191, 36, 0.25);
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--warning-text);
+  border: 1px solid rgba(217, 119, 6, 0.3);
 }
 
 .status-verifying {
-  background: rgba(96, 165, 250, 0.12);
-  color: #bfdbfe;
-  border: 1px solid rgba(96, 165, 250, 0.25);
+  background: rgba(96, 165, 250, 0.14);
+  color: var(--info-text);
+  border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .status-expired {
-  background: rgba(148, 163, 184, 0.1);
-  color: #cbd5e1;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(148, 163, 184, 0.14);
+  color: var(--muted);
+  border: 1px solid rgba(148, 163, 184, 0.28);
 }
 
 .order-card-names {
@@ -2714,7 +2814,7 @@ select.input {
   gap: 10px;
   margin-top: 10px;
   padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--glass-3);
 }
 
 .order-card-foot .price {
@@ -2766,7 +2866,7 @@ select.input {
   padding: 13px 15px;
   border-radius: 13px;
   border: 1px solid var(--border-strong);
-  background: rgba(16, 13, 26, 0.96);
+  background: var(--surface-glass-strong);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow-md);
   color: var(--text);
@@ -2818,7 +2918,7 @@ select.input {
   border-radius: 12px;
   border: 1px solid rgba(251, 191, 36, 0.35);
   background: #211a08;
-  color: #fde68a;
+  color: var(--warning-text);
   font-size: 13px;
   text-align: center;
 }
@@ -2966,7 +3066,7 @@ select.input {
     width: 38px;
     height: 38px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--glass-3);
     color: var(--muted);
   }
 
