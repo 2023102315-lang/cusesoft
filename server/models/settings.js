@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { config, dataDir } from './config.js';
+import { config, dataDir } from '../config.js';
 
 const settingsFile = path.join(dataDir, 'settings.json');
 

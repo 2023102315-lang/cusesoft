@@ -7,12 +7,14 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env server/index.js",
     "dev": "node --watch --env-file-if-exists=.env server/index.js",
-    "assets": "node scripts/make-assets.mjs"
+    "assets": "node scripts/make-assets.mjs",
+    "pack:portable": "node scripts/empaquetar-portable.mjs"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {
+    "ejs": "^7.0.2",
     "express": "^5.1.0",
     "google-auth-library": "^10.3.0",
     "nodemailer": "^7.0.6",

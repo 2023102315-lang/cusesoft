@@ -10,7 +10,24 @@ Tienda de productos digitales con catálogo, cuentas por correo (OTP) o Google, 
 
 ---
 
-## 1. Requisitos
+## 0. Arranque rápido sin instalar Node.js ni librerías
+
+El proyecto incluye tres formas de ejecutarse y seguir desarrollando actualizaciones sin necesidad de instalar Node.js manualmente en el sistema:
+
+1. **Paquete portable (`.zip` autocontenido):**
+   - Genera el paquete con `npm.cmd run pack:portable` (crea `dist/cusesoft-portable-win-x64.zip`).
+   - Quien lo descargue solo debe descomprimirlo y hacer doble clic en **`iniciar.bat`** (o **`iniciar-dev.bat`** para modo desarrollo con recarga automática al editar archivos). Ya incluye `runtime/node.exe` y `node_modules/`.
+2. **Al clonar el repositorio (`iniciar.bat` / `iniciar.sh`):**
+   - En Windows: ejecuta **`iniciar.bat`** (o **`iniciar-dev.bat`**).
+   - En Linux/macOS: ejecuta **`./iniciar.sh`** (o **`./iniciar.sh --dev`**).
+   - Si no detecta Node.js 22+ en el equipo, descarga automáticamente Node portable dentro de `./runtime`, instala `node_modules` la primera vez, crea `.env` desde `.env.example`, genera los assets y arranca la tienda.
+3. **Con Docker Compose:**
+   - Ejecuta `docker compose up --build`.
+   - Levanta el servidor con Node 22 y `node_modules` dentro del contenedor, montando `./server`, `./public` y `./scripts` con recarga automática (`--watch`) para continuar editando el código.
+
+---
+
+## 1. Requisitos (instalación manual)
 
 - Node.js **22 o superior** (probado con Node 26).
 - npm.
@@ -348,6 +365,7 @@ Está activo `REQUIRE_MANUAL_APPROVAL`. Apruébalo desde `/admin` con tu `ADMIN_
 | `npm.cmd start` | Arranca el servidor |
 | `npm.cmd run dev` | Arranca con recarga automática |
 | `npm.cmd run assets` | Regenera portadas y PDF de ejemplo |
+| `npm.cmd run pack:portable` | Empaqueta el proyecto con Node y `node_modules` en `dist/` (carpeta y `.zip`) |
 
 ---
 

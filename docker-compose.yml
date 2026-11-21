@@ -1,0 +1,17 @@
+services:
+  cusesoft:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./server:/app/server
+      - ./public:/app/public
+      - ./scripts:/app/scripts
+      - /app/node_modules
+    command: ["node", "--watch", "--env-file-if-exists=.env", "server/index.js"]
